@@ -1,6 +1,7 @@
 <div>
   <h3> nowa notatka </h3>
   <div>
+      <?php dump($params) ?>
       <form class="note-form" action="/?action=create" method="post">
           <ul>
               <li>
@@ -8,7 +9,7 @@
                   <input type="text" name="title" class="field-long">
               </li>
               <li>
-                  <labe>Opis</labe>
+                  <labe>Treść</labe>
                   <textarea name="description" id="field5" class="field-long field-textarea"></textarea>
               </li>
               <li>
