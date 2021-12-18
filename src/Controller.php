@@ -6,8 +6,14 @@ namespace App;
 
 require_once ("src/View.php");
 
-class Controller
-{
+class Controller {
+
+    private array $postData = [];
+
+    public function __construct(array $postData) {
+        $this->postData = $postData;
+    }
+
     public function run(string $action): void {
 
         $view = new View();
@@ -18,11 +24,11 @@ class Controller
                 $page = 'create';
                 $created = false;
 
-                if (!empty($_POST)) {
+                if (!empty($this->postData)) {
                     $created = true;
                     $viewParams = [
-                        'title' => $_POST['title'],
-                        'description' => $_POST['description']
+                        'title' => $this->postData['title'],
+                        'description' => $this->postData['description']
                     ];
                 }
 
