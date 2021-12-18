@@ -8,13 +8,19 @@ require_once ("src/View.php");
 
 class Controller {
 
-    private array $postData = [];
+    private const DEFAULT_ACTION = 'list';
 
-    public function __construct(array $postData) {
+    private array $postData = [];
+    private array $getData = [];
+
+    public function __construct(array $getData, array $postData) {
+        $this->getData = $getData;
         $this->postData = $postData;
     }
 
     public function run(string $action): void {
+
+        $action = $this->getData['action'] ?? self::DEFAULT_ACTION;
 
         $view = new View();
         $viewParams = [];
