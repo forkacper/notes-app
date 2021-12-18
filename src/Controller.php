@@ -18,7 +18,7 @@ class Controller {
         $this->postData = $postData;
     }
 
-    public function run(string $action): void {
+    public function run(): void {
 
         $action = $this->getData['action'] ?? self::DEFAULT_ACTION;
 
