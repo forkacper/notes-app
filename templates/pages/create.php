@@ -1,28 +1,27 @@
 <div>
   <h3> nowa notatka </h3>
   <div>
-      <?php if($params['created']) : ?>
+    <?php if ($params['created']) : ?>
       <div>
-          <div>Tytuł: <?= $params['title'] ?> </div>
-          <div>Treść: <?= $params['description'] ?></div>
+        <div>Tytuł: <?php echo $params['title'] ?></div>
+        <div>Treść: <?php echo $params['description'] ?></div>
       </div>
-      <?php else : ?>
+    <?php else : ?>
       <form class="note-form" action="/?action=create" method="post">
-          <ul>
-              <li>
-                  <label> Tytuł <span class="required">*</span></label>
-                  <input type="text" name="title" class="field-long">
-              </li>
-              <li>
-                  <labe>Treść</labe>
-                  <textarea name="description" id="field5" class="field-long field-textarea"></textarea>
-              </li>
-              <li>
-                  <input type="submit" value="Submit">
-              </li>
-          </ul>
-
+        <ul>
+          <li>
+            <label>Tytuł <span class="required">*</span></label>
+            <input type="text" name="title" class="field-long" />
+          </li>
+          <li>
+            <label>Treść</label>
+            <textarea name="description" id="field5" class="field-long field-textarea"></textarea>
+          </li>
+          <li>
+            <input type="submit" value="Submit" />
+          </li>
+        </ul>
       </form>
-      <?php endif; ?>
+    <?php endif; ?>
   </div>
 </div>

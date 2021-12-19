@@ -8,14 +8,11 @@ require_once("src/Utils/debug.php");
 require_once("src/Controller.php");
 
 $request = [
-    'get' => $_GET,
-    'post' => $_POST
+  'get' => $_GET,
+  'post' => $_POST
 ];
 
-//$controller->run();
 //$controller = new Controller($request);
+//$controller->run();
 
 (new Controller($request))->run();
-
-
-
