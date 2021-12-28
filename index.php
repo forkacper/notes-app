@@ -20,17 +20,19 @@ $request = [
 ];
 
 try {
-    //$controller = new Controller($request);
-    //$controller->run();
+  //$controller = new Controller($request);
+  //$controller->run();
 
-    Controller::initConfiguration($configuration);
-    (new Controller($request))->run();
+  Controller::initConfiguration($configuration);
+  (new Controller($request))->run();
 } catch (ConfigurationException $e) {
-    echo "Wystąpił błąd w aplikacji";
-    echo "Błąd w konfiugracji";
+  //mail('xxx@xxx.com', 'Errro', $e->getMessage());
+  echo '<h1>Wystąpił błąd w aplikacji</h1>';
+  echo 'Problem z applikacją, proszę spróbować za chwilę.';
 } catch (AppException $e) {
-    echo "Wystąpił błąd w aplikacji";
-    echo $e->getMessage();
+  echo '<h1>Wystąpił błąd w aplikacji</h1>';
+  echo '<h3>' . $e->getMessage() . '</h3>';
 } catch (Throwable $e) {
-    echo "Wystąpił błąd w aplikacji";
+  echo '<h1>Wystąpił błąd w aplikacji</h1>';
+  dump($e);
 }
