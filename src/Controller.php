@@ -19,6 +19,7 @@ class Controller
 
   private array $request;
   private View $view;
+  private Database $database;
 
   public static function initConfiguration(array $configuration):void {
       self::$configuration = $configuration;
@@ -29,7 +30,7 @@ class Controller
     if(empty(self::$configuration['db'])) {
         throw new ConfigurationException('Configuration error');
     }
-    $db = new Database(self::$configuration['db']);
+    $this->database = new Database(self::$configuration['db']);
 
     $this->request = $request;
     $this->view = new View();
@@ -47,10 +48,9 @@ class Controller
         $data = $this->getRequestPost();
         if (!empty($data)) {
           $created = true;
-          $viewParams = [
-            'title' => $data['title'],
-            'description' => $data['description']
-          ];
+
+          $this->database->createNote($data);
+          header('location: /');
         }
 
         $viewParams['created'] = $created;
