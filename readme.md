@@ -1,19 +1,21 @@
-# Listing notatek oraz wyświetlenie notatki
+# Time for refactoring
 
 ## Cel
 
-* wyświetlenie listingu notatek w systemie
-* możliwość wyświetlenia szczegółów wybranej notatki
+* poprawa jakości kodu w naszej aplikacji
 
 ## Krok po kroku
 
-1. dodanie metody pobierającej notatki z bazy danych
-2. stworzenie widoku wyświetlającego dane
-   * eskejpowanie danych
-3. dodanie przycisku na listingu "wyświetl szczegóły"
-4. metoda do pobrania konkretnej notatki z bazy danych
-   * zgłoszenie wyjątku NotFoundException gdy nie ma notatki o danym id
-5. szablon do wyświetlenia notatki
-   * dodac eskejpowanie
-6. prezentacja szczegółów notatki
-   * obsłzenie sytuacji gdy nie istnieje identyfikator
+1. REQUEST
+   * stworzenie metod pobierających
+   * metoda sprawdzająca czy jest dany parametr
+   * wyniesienie request do osobnego obiektu REQUEST
+2. CONTROLLER
+   * utworzenie metody per akcja
+   * usunięcie switch'a
+     * dynamiczne generowanie nazwy akcji
+     * sprawdzenie czy metoda akcji istnieje
+   * utworzenie kontrollera bazowego
+3. VIEW
+   * automatczne eskejpowanie
+   * rekurencja przy eskejpowaniu

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
-require_once("src/Request.php");
 require_once("src/Utils/debug.php");
 require_once("src/NoteController.php");
+require_once("src/Request.php");
 require_once("src/Exception/AppException.php");
 
 use App\Request;
@@ -22,7 +22,7 @@ try {
   //$controller = new Controller($request);
   //$controller->run();
 
-  AbstractController::initConfiguration($configuration)
+  AbstractController::initConfiguration($configuration);
   (new NoteController($request))->run();
 } catch (ConfigurationException $e) {
   //mail('xxx@xxx.com', 'Errro', $e->getMessage());
