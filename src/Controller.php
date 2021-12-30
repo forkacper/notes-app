@@ -6,6 +6,7 @@ namespace App;
 
 require_once("src/Exception/ConfigurationException.php");
 
+use App\Request;
 use App\Exception\ConfigurationException;
 use App\Exception\NotFoundException;
 
@@ -19,7 +20,7 @@ class Controller
   private static array $configuration = [];
 
   private Database $database;
-  private array $request;
+  private Request $request;
   private View $view;
 
   public static function initConfiguration(array $configuration): void
@@ -27,7 +28,7 @@ class Controller
     self::$configuration = $configuration;
   }
 
-  public function __construct(array $request)
+  public function __construct(Request $request)
   {
     if (empty(self::$configuration['db'])) {
       throw new ConfigurationException('Configuration error');
@@ -38,70 +39,79 @@ class Controller
     $this->view = new View();
   }
 
-  public function run(): void
-  {
-    switch ($this->action()) {
-      case 'create':
-        $page = 'create';
+  public function create() {
+      $page = 'create';
 
-        $data = $this->getRequestPost();
-        if (!empty($data)) {
+      if ($this->request->hasPost()) {
           $noteData = [
-            'title' => $data['title'],
-            'description' => $data['description']
+              'title' => $this->request->postParam('title'),
+              'description' => $this->request->postParam('description')
           ];
           $this->database->createNote($noteData);
           header('Location: /?before=created');
           exit;
-        }
+      }
 
-        break;
-      case 'show':
-        $page = 'show';
+      $this->view->render($page, $viewParams ?? []);
+  }
 
-        $data = $this->getRequestGet();
-        $noteId = (int) ($data['id'] ?? null);
+  public function show() {
+      $page = 'show';
 
-        if (!$noteId) {
+      $noteId = (int) $this->request->getParam('id');
+
+      if (!$noteId) {
           header('Location: /?error=missingNoteId');
           exit;
-        }
+      }
 
-        try {
+      try {
           $note = $this->database->getNote($noteId);
-        } catch (NotFoundException $e) {
+      } catch (NotFoundException $e) {
           header('Location: /?error=noteNotFound');
           exit;
-        }
+      }
 
-        $viewParams = [
+      $viewParams = [
           'note' => $note
-        ];
+      ];
+
+      $this->view->render(
+          'show',
+          ['note' => $note]
+      );
+  }
+
+  public function list() {
+      $this->view->render(
+          'list',
+          [
+              'notes' => $this->database->getNotes(),
+              'before' => $this->request->getParam('before'),
+              'error' => $this->request->getParam('error')
+          ]
+      );
+  }
+
+  public function run(): void
+  {
+    switch ($this->action()) {
+      case 'create':
+          $this->create();
+        break;
+      case 'show':
+          $this->show();
         break;
       default:
-        $page = 'list';
-        $data = $this->getRequestGet();
+          $this->list();
+          break;
+      }
 
-        $viewParams = [
-          'notes' => $this->database->getNotes(),
-          'before' => $data['before'] ?? null,
-          'error' => $data['error'] ?? null
-        ];
-        break;
-    }
-
-    $this->view->render($page, $viewParams ?? []);
   }
 
   private function action(): string
   {
-    $data = $this->getRequestGet();
-    return $data['action'] ?? self::DEFAULT_ACTION;
-  }
-
-  private function getRequestGet(): array
-  {
-    return $this->request['get'] ?? [];
+    return $this->request->getParam('action', self::DEFAULT_ACTION);
   }
 
   private function getRequestPost(): array

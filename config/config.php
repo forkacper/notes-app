@@ -6,7 +6,7 @@ return [
   'db' => [
     'host' => 'localhost',
     'database' => 'notes',
-    'user' => 'user_notes',
-    'password' => 'fcv3iRcTxYfnNY6H'
+    'user' => 'root',
+    'password' => ''
   ]
 ];

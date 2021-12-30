@@ -93,7 +93,7 @@ class Database
       empty($config['database'])
       || empty($config['host'])
       || empty($config['user'])
-      || empty($config['password'])
+//      || empty($config['password'])
     ) {
       throw new ConfigurationException('Storage configuration error');
     }
