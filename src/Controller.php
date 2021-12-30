@@ -40,8 +40,6 @@ class Controller
 
   public function run(): void
   {
-    $viewParams = [];
-
     switch ($this->action()) {
       case 'create':
         $page = 'create';
@@ -54,6 +52,7 @@ class Controller
           ];
           $this->database->createNote($noteData);
           header('Location: /?before=created');
+          exit;
         }
 
         break;
@@ -63,33 +62,31 @@ class Controller
         $data = $this->getRequestGet();
         $noteId = (int) ($data['id'] ?? null);
 
-        if(!$noteId) {
-            header('Location: /?error=missingNoteId');
-            exit;
+        if (!$noteId) {
+          header('Location: /?error=missingNoteId');
+          exit;
         }
 
         try {
-            $note = $this->database->getNote($noteId);
+          $note = $this->database->getNote($noteId);
         } catch (NotFoundException $e) {
-            header('Location: /?error=noteNotFound');
-            exit;
+          header('Location: /?error=noteNotFound');
+          exit;
         }
 
         $viewParams = [
-            'note' => $note
+          'note' => $note
         ];
         break;
       default:
         $page = 'list';
-
         $data = $this->getRequestGet();
 
         $viewParams = [
-            'notes' => $this->database->getNotes(),
-            'before' => $data['before'] ?? null,
-            'error' => $data['error'] ?? null
+          'notes' => $this->database->getNotes(),
+          'before' => $data['before'] ?? null,
+          'error' => $data['error'] ?? null
         ];
-        $viewParams['before'] = $data['before'] ?? null;
         break;
     }
 
