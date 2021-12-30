@@ -39,7 +39,7 @@ class Controller
     $this->view = new View();
   }
 
-  public function create() {
+  public function createAction() {
       $page = 'create';
 
       if ($this->request->hasPost()) {
@@ -55,7 +55,7 @@ class Controller
       $this->view->render($page, $viewParams ?? []);
   }
 
-  public function show() {
+  public function showAction() {
       $page = 'show';
 
       $noteId = (int) $this->request->getParam('id');
@@ -82,7 +82,7 @@ class Controller
       );
   }
 
-  public function list() {
+  public function listAction() {
       $this->view->render(
           'list',
           [
@@ -95,18 +95,13 @@ class Controller
 
   public function run(): void
   {
-    switch ($this->action()) {
-      case 'create':
-          $this->create();
-        break;
-      case 'show':
-          $this->show();
-        break;
-      default:
-          $this->list();
-          break;
+      $action = $this->action() . 'Action';
+
+      if (!method_exists($this, $action)) {
+        $action = self::DEFAULT_ACTION . 'Action';
       }
 
+      $this->$action();
   }
 
   private function action(): string
