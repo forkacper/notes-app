@@ -1,21 +1,20 @@
-# Time for refactoring
+# Edycja notatki
 
 ## Cel
 
 * poprawa jakości kodu w naszej aplikacji
+* z widoku szczegółów notatki mozemy przejśc do jej edycji
 
 ## Krok po kroku
 
-1. REQUEST
-   * stworzenie metod pobierających
-   * metoda sprawdzająca czy jest dany parametr
-   * wyniesienie request do osobnego obiektu REQUEST
-2. CONTROLLER
-   * utworzenie metody per akcja
-   * usunięcie switch'a
-     * dynamiczne generowanie nazwy akcji
-     * sprawdzenie czy metoda akcji istnieje
-   * utworzenie kontrollera bazowego
-3. VIEW
-   * automatczne eskejpowanie
-   * rekurencja przy eskejpowaniu
+1. przeniesienie kontrollerów do osobnego katalogu
+2. wprowadzenie autoloadera:
+   * zapoznanie z dokumentacją: https://www.php.net/manual/en/language.oop5.autoload.php
+   * usunięcie niepotrzebnych require_once
+3. wyświetlenie notatki do edycji
+   * dodanie do kalsy Rrequest metody sprawdzającej typ requestu, wprowadzenie $_SERVER 
+   * pobranie danych
+   * utworzenie formularza
+   * uzupełnienie formularza
+4. aktualizacja danych w bazie
+   * metoda do aktualizacji danych
