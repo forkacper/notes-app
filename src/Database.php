@@ -42,8 +42,11 @@ class Database
     return $note;
   }
 
-  public function getNotes(string $sortBy, string $sortOrder): array
+  public function getNotes(int $pageNumber, int $pageSize, string $sortBy, string $sortOrder): array
   {
+      $limit = $pageNumber;
+      $offset = $pageNumber * $pageSize;
+
     try {
       if (!in_array($sortBy, ['created', 'title'])) {
         $sortBy = 'title';
@@ -57,6 +60,7 @@ class Database
         SELECT id, title, created 
         FROM notes
         ORDER BY $sortBy $sortOrder
+        LIMIT $limit, $offset
       ";
 
       $result = $this->conn->query($query);
@@ -131,7 +135,7 @@ class Database
       empty($config['database'])
       || empty($config['host'])
       || empty($config['user'])
-      || empty($config['password'])
+//      || empty($config['password'])
     ) {
       throw new ConfigurationException('Storage configuration error');
     }
