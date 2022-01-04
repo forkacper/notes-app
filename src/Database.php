@@ -42,10 +42,23 @@ class Database
     return $note;
   }
 
-  public function getNotes(): array
+  public function getNotes(string $sortBy, string $sortOrder): array
   {
     try {
-      $query = "SELECT id, title, created FROM notes";
+      if (!in_array($sortBy, ['created', 'title'])) {
+        $sortBy = 'title';
+      }
+
+      if (!in_array($sortOrder, ['asc', 'desc'])) {
+        $sortOrder = 'desc';
+      }
+
+      $query = "
+        SELECT id, title, created 
+        FROM notes
+        ORDER BY $sortBy $sortOrder
+      ";
+
       $result = $this->conn->query($query);
       return $result->fetchAll(PDO::FETCH_ASSOC);
     } catch (Throwable $e) {
@@ -91,12 +104,12 @@ class Database
 
   public function deleteNote(int $id): void
   {
-      try {
-          $query = "DELETE FROM notes WHERE id = $id LIMIT 1";
-          $this->conn->exec($query);
-      } catch (Throwable $e) {
-          throw new StorageException('Nie udało się usunąć notatki', 400, $e);
-      }
+    try {
+      $query = "DELETE FROM notes WHERE id = $id LIMIT 1";
+      $this->conn->exec($query);
+    } catch (Throwable $e) {
+      throw new StorageException('Nie udało się usunąć notatki', 400, $e);
+    }
   }
 
   private function createConnection(array $config): void
@@ -118,7 +131,7 @@ class Database
       empty($config['database'])
       || empty($config['host'])
       || empty($config['user'])
-//      || empty($config['password'])
+      || empty($config['password'])
     ) {
       throw new ConfigurationException('Storage configuration error');
     }

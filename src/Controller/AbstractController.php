@@ -35,7 +35,7 @@ abstract class AbstractController
     $this->view = new View();
   }
 
-  public function run(): void
+  final public function run(): void
   {
     $action = $this->action() . 'Action';
     if (!method_exists($this, $action)) {
