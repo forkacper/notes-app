@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Database;
+use App\Exception\NotFoundException;
+use App\Exception\StorageException;
 use App\Request;
 use App\View;
 use App\Exception\ConfigurationException;
@@ -37,12 +39,21 @@ abstract class AbstractController
 
   final public function run(): void
   {
-    $action = $this->action() . 'Action';
-    if (!method_exists($this, $action)) {
-      $action = self::DEFAULT_ACTION . 'Action';
-    }
+      try {
+          $action = $this->action() . 'Action';
+          if (!method_exists($this, $action)) {
+              $action = self::DEFAULT_ACTION . 'Action';
+          }
+            throw new StorageException('test');
+          $this->$action();
+      } catch (StorageException $e) {
+        $this->view->render(
+            'error', ['message' => $e->getMessage()]
+        );
+      } catch (NotFoundException $e) {
+          $this->view->redirect('/', ['error' => 'Note not found']);
+      }
 
-    $this->$action();
   }
 
   final protected function redirect(string $to, array $params): void
