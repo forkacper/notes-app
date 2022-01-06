@@ -43,14 +43,15 @@ class NoteController extends AbstractController
         $pageSize = self::PAGE_SIZE;
     }
 
-    $notes = $this->database->getNotes($pageNumber, $pageSize, $sortBy, $sortOrder);
+    $note = $this->database->getNotes($pageNumber, $pageSize, $sortBy, $sortOrder);
+    $notes = $this->database->getCount();
 
     $this->view->render(
       'list',
       [
-        'page' => ['number' => $pageNumber, 'size' => $pageSize],
+        'page' => ['number' => $pageNumber, 'size' => $pageSize, 'pages' => (int) ceil($notes/$pageSize)],
         'sort' => ['by' => $sortBy, 'order' => $sortOrder],
-        'notes' => $notes,
+        'notes' => $note,
         'before' => $this->request->getParam('before'),
         'error' => $this->request->getParam('error')
       ]
