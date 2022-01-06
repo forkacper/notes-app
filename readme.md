@@ -1,14 +1,13 @@
-# Listing notatek - sortowanie
+# Listing notatek - paginacja
 
 ## Cel
 
 * ułatwienie obsługi listy notatek
-  * dodanie opcji sortowania notatek
+  * dodanie opcji paginacji dla listingu notatek
 
 ## Krok po kroku
 
-1. wyświetlenie na listingu daty dodania notatki
-2. dodanie sekcji z opcjami sortowania i filtrowania
-   * sortowanie po tytule
-   * sortowanie po dacie
-3. obsługę sortowania po stronie bazy danych
+1. wyświetlenie na listingu sekcji z numerami stron
+2. obsługa paginacji w kontrollerach
+3. obsługę paginacji po stronie bazy danych
+   * metod do zwracana informacji o liczbie wpisów

@@ -25,21 +25,6 @@ class Database
     }
   }
 
-  public function getCount(): int
-  {
-      try {
-        $query = "SELECT count(*) AS cn FROM notes";
-        $result = $this->conn->query($query);
-        $result = $result->fetch(PDO::FETCH_ASSOC);
-        if($result) {
-          return (int) $result['cn'];
-        }
-        return 0;
-      } catch(Throwable $e) {
-        throw new StorageException('Nie udało się pobrać informacji o liczbie notatek', 400, $e);
-      }
-  }
-
   public function getNote(int $id): array
   {
     try {
@@ -57,12 +42,16 @@ class Database
     return $note;
   }
 
-  public function getNotes(int $pageNumber, int $pageSize, string $sortBy, string $sortOrder): array
-  {
-      $limit = $pageNumber;
-      $offset = $pageNumber * $pageSize;
-
+  public function getNotes(
+    int $pageNumber,
+    int $pageSize,
+    string $sortBy,
+    string $sortOrder
+  ): array {
     try {
+      $limit = $pageSize;
+      $offset = ($pageNumber - 1) * $pageSize;
+
       if (!in_array($sortBy, ['created', 'title'])) {
         $sortBy = 'title';
       }
@@ -75,13 +64,29 @@ class Database
         SELECT id, title, created 
         FROM notes
         ORDER BY $sortBy $sortOrder
-        LIMIT $limit, $offset
+        LIMIT $offset, $limit
       ";
 
       $result = $this->conn->query($query);
       return $result->fetchAll(PDO::FETCH_ASSOC);
     } catch (Throwable $e) {
       throw new StorageException('Nie udało się pobrać danych o notatkach', 400, $e);
+    }
+  }
+
+  public function getCount(): int
+  {
+    try {
+      $query = "SELECT count(*) AS cn FROM notes";
+      $result = $this->conn->query($query);
+      $result = $result->fetch(PDO::FETCH_ASSOC);
+      if ($result === false) {
+        throw new StorageException('Błąd przy próbie pobrania ilości notatek', 400);
+      }
+
+      return (int) $result['cn'];
+    } catch (Throwable $e) {
+      throw new StorageException('Nie udało się pobrać informacji o liczbie notatek', 400, $e);
     }
   }
 
@@ -150,7 +155,7 @@ class Database
       empty($config['database'])
       || empty($config['host'])
       || empty($config['user'])
-//      || empty($config['password'])
+      || empty($config['password'])
     ) {
       throw new ConfigurationException('Storage configuration error');
     }
