@@ -1,3 +1,3 @@
 <div class="error">
-    <?php echo $params['message'] ?? '' ?>
+  <?php echo $params['message'] ?? '' ?>
 </div>
